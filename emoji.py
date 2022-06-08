@@ -1,0 +1,77 @@
+import enum
+
+
+EMOJI_DIGITS = {
+    '0': u'\U00000030\U0000FE0F\U000020E3',
+    '1': u'\U00000031\U0000FE0F\U000020E3',
+    '2': u'\U00000032\U0000FE0F\U000020E3',
+    '3': u'\U00000033\U0000FE0F\U000020E3',
+    '4': u'\U00000034\U0000FE0F\U000020E3',
+    '5': u'\U00000035\U0000FE0F\U000020E3',
+    '6': u'\U00000036\U0000FE0F\U000020E3',
+    '7': u'\U00000037\U0000FE0F\U000020E3',
+    '8': u'\U00000038\U0000FE0F\U000020E3',
+    '9': u'\U00000039\U0000FE0F\U000020E3'
+}
+
+
+def emoji_number_string(number):
+
+    result = []
+
+    for digit in str(number):
+        result.append(EMOJI_DIGITS[digit])
+
+    return "".join(result)
+
+
+class Emoji(enum.Enum):
+
+    # Данные кодировки:
+    # https://emojio.ru/symbols/0031fe0f20e3-0031-fe0f-20e3-knopka-odin.html
+
+    DONE = u'\U00002705'
+    SAD = u'\U0001F61E'
+    THUMBS_UP = u'\U0001F44D'
+    ANGUISHED_FACE = u'\U0001F627'
+    MENT = u'\U0001F46E'
+    CALENDAR = u'\U0001F4C5'
+    MONEY = u'\U0001F4B8'
+    SMILE = u'\U0001F609'
+    MAIL = u'\U00002709'
+    SEE_NO_EVIL_MONKEY = u'\U0001F648'
+    PENCIL = u'\U0000270F'
+    RED_CIRCLE = u'\U0001F534'
+    GREEN_CIRCLE = u'\U0001F7E2'
+    XMAN = u'\U0001F645\U0000200D\U00002642\U0000FE0F'
+    INFORMATION = u'\U00002139'
+    HZ_MAN = u'\U0001F937\U0000200D\U00002642\U0000FE0F'
+    STARS = u'\U00002728'
+    SHADOW_USER = u'\U0001F464'
+    ACCESS_DENIED = u'\U0001F6AB'
+    WAVING_HAND = u'\U0001F44B'
+    USER = u'\U0001F464'
+    PHONE = u'\U0001F4F1'
+    FILEBOX = u'\U0001F5C3'
+    DENY = u'\U0001F6AB'
+    ALLOW = u'\U00002705'
+    MARKER = u'\U000025AA'
+    KILL_USER = u'\U0001F6B7'
+    STOPWATCH = u'\U000023F1'
+    UPUP = u'\U000023EB'
+    BARCHART = u'\U0001F4CA'
+    ARROW_RIGHT = u'\U000027A1'
+    PAUSE = u'\U000023F8'
+    X = u'\U0000274C'
+    QUESTION_MARK = u'\U00002753'
+    SMIRKIN_FACE = 	u'\U0001F60F'
+    AXE = u'\U0001FA93'
+    CLOCK = u'\U0001F550'
+    MOLESTER_MOON = u'\U0001F31A'
+    REFRESH = u'\U0001F504'
+
+    # Мужик
+    SIMPLE_MAN_SKIN_1 = u'\U0001F468\U0001F3FC' # ... белый
+    SIMPLE_MAN_SKIN_2 = u'\U0001F468\U0001F3FD' # ... темнее
+    SIMPLE_MAN_SKIN_3 = u'\U0001F468\U0001F3FE' # ... темный
+    SIMPLE_MAN_SKIN_4 = u'\U0001F468\U0001F3FF' # ... совсем черный

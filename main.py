@@ -4,6 +4,7 @@ from db import BotDB
 import markups as nav
 import os
 from dotenv import load_dotenv
+from emoji import Emoji
 
 BOT_DB = BotDB('kupiplz.db')
 load_dotenv()
@@ -24,6 +25,8 @@ async def start(message: types.Message):
         BOT_DB.clear_current_list(BOT_DB.get_user_id(user_id))
         await BOT.delete_message(message.chat.id, message.message_id)
         await BOT.send_message(user_id, 'Добро пожаловать!\nГлавное меню', reply_markup=nav.main_menu)
+        await BOT.send_message(user_id, Emoji.SIMPLE_MAN_SKIN_1.value+"Пример. Доделать!")
+
 
 
 @DP.message_handler()
