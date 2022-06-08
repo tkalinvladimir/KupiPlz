@@ -6,6 +6,11 @@ import os
 from dotenv import load_dotenv
 from emoji import Emoji
 
+# TODO удалить список
+# TODO шеринг списков
+# TODO эмодзи
+# TODO эдит месседж вместо удаления
+
 BOT_DB = BotDB('kupiplz.db')
 load_dotenv()
 TOKEN = os.getenv('TOKEN')
