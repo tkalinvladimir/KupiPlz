@@ -2,12 +2,16 @@ import logging
 from aiogram import Bot, Dispatcher, executor, types
 from db import BotDB
 import markups as nav
+import os
+from dotenv import load_dotenv
 
 BOT_DB = BotDB('kupiplz.db')
-TOKEN = "5595193598:AAGEaOb8WOOKPP24lmUp5TGh0ZvTqWK4QgI"
-logging.basicConfig(level=logging.INFO)
+load_dotenv()
+TOKEN = os.getenv('TOKEN')
 BOT = Bot(token=TOKEN)
 DP = Dispatcher(BOT)
+
+logging.basicConfig(level=logging.INFO)
 
 
 @DP.message_handler(commands=['start'])
@@ -49,8 +53,7 @@ async def bot_message(message: types.Message):
                 products = BOT_DB.get_products(list_id)
                 text = create_products_message_text(list_name, products)
                 await BOT.delete_message(chat_id, message_id)
-                msg = await BOT.send_message(user_id, text,
-                                       reply_markup=nav.show_products(products), parse_mode="HTML")
+                msg = await BOT.send_message(user_id, text, reply_markup=nav.show_products(products), parse_mode="HTML")
                 BOT_DB.set_current_state(BOT_DB.get_user_id(user_id), "AddingProducts", msg.message_id)
             else:
                 await BOT.delete_message(chat_id, message_id)
@@ -95,11 +98,9 @@ async def editing_list_handler(call):
         await BOT.delete_message(call.message.chat.id, call.message.message_id)
         lists = BOT_DB.get_lists(BOT_DB.get_user_id(call.from_user.id))
         await BOT.send_message(call.message.chat.id, "Ваши списки:", reply_markup=nav.list_look_menu(lists))
-        # await BOT.edit_message_text("Главное меню", call.message.chat.id, call.message.message_id, reply_markup=nav.main_menu)
     else:
         user_id = call.from_user.id
         product_id = int(call.data[12:])
-        #нажали на товар - надо пометить, что товар куплен, удалить сообщение и отправить заного
         await BOT.delete_message(call.message.chat.id, call.message.message_id)
         BOT_DB.set_product_bought(product_id)
         list_id = BOT_DB.get_current_list(BOT_DB.get_user_id(user_id))
@@ -109,10 +110,10 @@ async def editing_list_handler(call):
         msg = await BOT.send_message(user_id, text, reply_markup=nav.show_products(products), parse_mode="HTML")
         BOT_DB.set_current_state(BOT_DB.get_user_id(user_id), "AddingProducts", msg.message_id)
 
+
 async def adding_list_handler(call):
     BOT_DB.clear_states(BOT_DB.get_user_id(call.from_user.id))
     BOT_DB.clear_current_list(BOT_DB.get_user_id(call.from_user.id))
-    # await BOT.edit_message_text("Главное меню", call.message.chat.id, call.message.message_id, reply_markup=nav.main_menu)
     await BOT.delete_message(call.message.chat.id, call.message.message_id)
     lists = BOT_DB.get_lists(BOT_DB.get_user_id(call.from_user.id))
     await BOT.send_message(call.message.chat.id, "Ваши списки:", reply_markup=nav.list_look_menu(lists))
