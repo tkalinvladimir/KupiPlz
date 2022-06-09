@@ -6,10 +6,12 @@ import os
 from dotenv import load_dotenv
 from emoji import Emoji
 
+# TODO при регистрации Помимо проверки наличия юзера проверять наличие номера телефона
 # TODO удалить список
 # TODO шеринг списков
 # TODO эмодзи
 # TODO эдит месседж вместо удаления
+# TODO многострочное сообщение при добавлении в список - разбивать на отдельные продукты и сувать в БД
 
 BOT_DB = BotDB('kupiplz.db')
 load_dotenv()
@@ -24,13 +26,38 @@ logging.basicConfig(level=logging.INFO)
 async def start(message: types.Message):
     if message.chat.type == 'private':
         user_id = message.from_user.id
-        if not BOT_DB.user_exists(user_id):
-            BOT_DB.add_user(user_id)
+        await BOT.delete_message(message.chat.id, message.message_id)
+        if not BOT_DB.user_exists(user_id): # TODO вот сюда проверку ИЛИ нет номера телефона
+            msg = await BOT.send_message(user_id, "Для начала работы нужно предоставить свой номер телефона.\n"+Emoji.ARROW_DOWN.value +" Нажмите кнопку внизу"+Emoji.ARROW_DOWN.value, reply_markup=nav.get_contact_menu)
+            BOT_DB.add_user(user_id, 0)
+            BOT_DB.set_current_state(BOT_DB.get_user_id(user_id), "registration", msg.message_id)
+        else:
+            await BOT.send_message(user_id, "Добро пожаловать!\n"+Emoji.HOME.value+" Главное меню", reply_markup=nav.main_menu)
+
+
+@DP.message_handler(content_types=['contact'])
+async def registration(message):
+    user_id = message.from_user.id
+    if message.contact.user_id == user_id:
+        await BOT.delete_message(message.chat.id, BOT_DB.get_current_state_msg(BOT_DB.get_user_id(user_id)))
+        await BOT.delete_message(message.chat.id, message.message_id)
+        BOT_DB.add_user(user_id, message.contact.phone_number)
         BOT_DB.clear_states(BOT_DB.get_user_id(user_id))
         BOT_DB.clear_current_list(BOT_DB.get_user_id(user_id))
-        await BOT.delete_message(message.chat.id, message.message_id)
-        await BOT.send_message(user_id, 'Добро пожаловать!\nГлавное меню', reply_markup=nav.main_menu)
-        await BOT.send_message(user_id, Emoji.SIMPLE_MAN_SKIN_1.value+"Пример. Доделать!")
+        await BOT.send_message(user_id, "Добро пожаловать!\n"+Emoji.HOME.value+" Главное меню", reply_markup=nav.main_menu)
+    else:
+        await BOT.send_message(user_id, "Для начала работы нужно предоставить СВОЙ номер телефона", reply_markup=nav.get_contact_menu)
+
+
+    # if message.chat.type == 'private':
+    #     user_id = message.from_user.id
+    #     if not BOT_DB.user_exists(user_id):
+    #         BOT_DB.add_user(user_id)
+    #     BOT_DB.clear_states(BOT_DB.get_user_id(user_id))
+    #     BOT_DB.clear_current_list(BOT_DB.get_user_id(user_id))
+    #     await BOT.delete_message(message.chat.id, message.message_id)
+    #     await BOT.send_message(user_id, 'Добро пожаловать!\nГлавное меню', reply_markup=nav.main_menu)
+    #     await BOT.send_message(user_id, Emoji.SIMPLE_MAN_SKIN_1.value+"Пример. Доделать!")
 
 
 
@@ -134,7 +161,7 @@ async def chosen_list_handler(call):
         BOT_DB.clear_states(BOT_DB.get_user_id(user_id))
         BOT_DB.clear_current_list(BOT_DB.get_user_id(user_id))
         await BOT.delete_message(call.message.chat.id, message_id)
-        await BOT.send_message(call.message.chat.id, "Главное меню", reply_markup=nav.main_menu)
+        await BOT.send_message(call.message.chat.id, Emoji.HOME.value+" Главное меню", reply_markup=nav.main_menu)
         # await BOT.edit_message_text("Главное меню", call.message.chat.id, message_id, reply_markup=nav.main_menu)
     else:
         list_id = int(call.data[11:])

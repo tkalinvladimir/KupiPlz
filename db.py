@@ -18,9 +18,9 @@ class BotDB:
         result = self.cursor.execute("SELECT `id` FROM `users` WHERE `user_id` = ?", (user_id,))
         return result.fetchone()[0]
 
-    def add_user(self, user_id):
+    def add_user(self, user_id, phone):
         # Добавляем юзера в базу
-        self.cursor.execute("INSERT INTO `users` (`user_id`) VALUES (?)", (user_id,))
+        self.cursor.execute("INSERT INTO `users` (`user_id`, `phone`) VALUES (?, ?)", (user_id, phone,))
         return self.conn.commit()
 
     # -----------------      CURR STATES AND LISTS   --------------

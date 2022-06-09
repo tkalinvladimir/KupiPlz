@@ -1,34 +1,19 @@
 import enum
 
 
-EMOJI_DIGITS = {
-    '0': u'\U00000030\U0000FE0F\U000020E3',
-    '1': u'\U00000031\U0000FE0F\U000020E3',
-    '2': u'\U00000032\U0000FE0F\U000020E3',
-    '3': u'\U00000033\U0000FE0F\U000020E3',
-    '4': u'\U00000034\U0000FE0F\U000020E3',
-    '5': u'\U00000035\U0000FE0F\U000020E3',
-    '6': u'\U00000036\U0000FE0F\U000020E3',
-    '7': u'\U00000037\U0000FE0F\U000020E3',
-    '8': u'\U00000038\U0000FE0F\U000020E3',
-    '9': u'\U00000039\U0000FE0F\U000020E3'
-}
-
-
-def emoji_number_string(number):
-
-    result = []
-
-    for digit in str(number):
-        result.append(EMOJI_DIGITS[digit])
-
-    return "".join(result)
-
-
 class Emoji(enum.Enum):
 
     # Данные кодировки:
     # https://emojio.ru/symbols/0031fe0f20e3-0031-fe0f-20e3-knopka-odin.html
+
+
+    ARROW_DOWN = u"\U00002B07"
+    ARROW_LEFT = u"\U00002B05"
+    REGISTRATION = u"\U0001F6C2"
+    ALL_LISTS = u"\U0001F50D"
+    ADD_LIST = u"\U00002795"
+    HOME = u"\U0001F3E0"
+
 
     DONE = u'\U00002705'
     SAD = u'\U0001F61E'
